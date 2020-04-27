@@ -11,27 +11,32 @@ def gen_slug(slug):
     return new_slug
 
 
-GENRES = (
-    ('Сказка', 'Сказка'),
-    ('Рок', 'Рок'),
-    ('Артхаус', 'Артхаус'),
-)
-
-
 class Works(models.Model):
 
     name = models.CharField(max_length=200,  verbose_name=_("Название"))
-    genre = models.CharField(
-        max_length=30, choices=GENRES,  verbose_name=_("Жанр"))
     rating = models.FloatField(
         default=0, null=True, blank=True, verbose_name=_("Рейтинг"))
     pub_date = models.DateTimeField(
         auto_now=True, verbose_name=_("Дата добавления"))
 
     class Meta:
-    verbose_name = 'Произведение'
-    verbose_name_plural = "Произведения"
-    ordering = ["-pub_date"]
+        verbose_name = 'Произведение'
+        verbose_name_plural = "Произведения"
+        ordering = ["-pub_date"]
+
+class Genre(models.Model):
+    work = models.ManyToManyField(Works, related_name='genre', verbose_name=_("Жанр"))
+    title = models.CharField(max_length=100,  verbose_name=_("Название"))
+    slug = models.SlugField(max_length=150, unique=True,
+                            verbose_name=_("Слаг"))
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = gen_slug(self.slug)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
 
 
 class Сategory(models.Model):
