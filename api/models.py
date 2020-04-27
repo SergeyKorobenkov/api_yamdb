@@ -12,7 +12,7 @@ def gen_slug(slug):
 
 
 class Works(models.Model):
-
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="work_author",  verbose_name=_("Пользователь"))
     name = models.CharField(max_length=200,  verbose_name=_("Название"))
     rating = models.FloatField(
         default=0, null=True, blank=True, verbose_name=_("Рейтинг"))
