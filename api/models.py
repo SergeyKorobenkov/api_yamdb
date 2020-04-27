@@ -5,9 +5,11 @@ from django.utils.text import slugify
 
 User = get_user_model()
 
+
 def gen_slug(slug):
-    new_slug = slugify(slug, allow_unicode = True)
+    new_slug = slugify(slug, allow_unicode=True)
     return new_slug
+
 
 GENRES = (
     ('Сказка', 'Сказка'),
@@ -15,10 +17,12 @@ GENRES = (
     ('Артхаус', 'Артхаус'),
 )
 
+
 class Works(models.Model):
 
     name = models.CharField(max_length=200,  verbose_name=_("Название"))
-    genre = models.CharField(max_length=30, choices=GENRES,  verbose_name=_("Жанр"))
+    genre = models.CharField(
+        max_length=30, choices=GENRES,  verbose_name=_("Жанр"))
     rating = models.FloatField(
         default=0, null=True, blank=True, verbose_name=_("Рейтинг"))
     pub_date = models.DateTimeField(
@@ -29,11 +33,14 @@ class Works(models.Model):
     verbose_name_plural = "Произведения"
     ordering = ["-pub_date"]
 
+
 class Сategory(models.Model):
     title = models.CharField(max_length=200, verbose_name=_("Название"))
-    slug = models.SlugField(max_length=150, unique = True, verbose_name=_("Слаг"))
-    description = models.TextField( verbose_name=_("Описание"))
-    work = models.ForeignKey(Works, on_delete=models.SET_NULL, blank=True, null=True, related_name="category", verbose_name=_("Произведение"))
+    slug = models.SlugField(max_length=150, unique=True,
+                            verbose_name=_("Слаг"))
+    description = models.TextField(verbose_name=_("Описание"))
+    work = models.ForeignKey(Works, on_delete=models.SET_NULL, blank=True,
+                             null=True, related_name="category", verbose_name=_("Произведение"))
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -42,6 +49,7 @@ class Сategory(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Vote(models.Model):
     value = models.SmallIntegerField(verbose_name=_("Оценка"))
