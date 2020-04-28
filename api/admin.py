@@ -1,8 +1,15 @@
 from django.contrib import admin
+from .models import *
 
-from .models import Title, Category, Genre
+class TitleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'year')
+    empty_value_display = '-пусто-'
+
+admin.site.register(Title, TitleAdmin)
 
 
-admin.site.register(Title)
-admin.site.register(Category)
-admin.site.register(Genre)
+class RewiewAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'score', 'text')
+    empty_value_display = '-пусто-'
+
+admin.site.register(Rewiew, RewiewAdmin)
