@@ -8,11 +8,12 @@ from .models import Category, Genre, Title
 from .permissions import IsAdminOrReadOnly
 from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
 
-class ReviewViewSet(ObjectMixin,viewsets.ModelViewSet):
-    queryset = Rewiew.objects.all()
-    serializer_class = RewiewSerializer
-    model = Rewiew
-    serializer = RewiewSerializer
+
+class ReviewViewSet(ObjectMixin, viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    model = Review
+    serializer = ReviewSerializer
 
 
 class CommentViewSet(ObjectMixin, viewsets.ModelViewSet):
@@ -20,8 +21,6 @@ class CommentViewSet(ObjectMixin, viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     model = Comment
     serializer = CommentSerializer
-
-
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -55,4 +54,3 @@ class GenreViewSet(mixins.CreateModelMixin,
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     lookup_field = 'slug'
->>>>>>> develop_Nikita

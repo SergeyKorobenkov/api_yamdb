@@ -45,7 +45,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comment_author")
     review = models.ForeignKey(
-        Rewiew, on_delete=models.CASCADE, related_name="vote_comment")
+        Review, on_delete=models.CASCADE, related_name="vote_comment")
 
 
 class Category(models.Model):
