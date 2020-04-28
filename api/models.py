@@ -7,29 +7,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 User = get_user_model()
 
 
-# class Title(models.Model):
-#     #author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="work_author",  verbose_name=_("Пользователь"))
-#     name = models.CharField(max_length=200,  verbose_name=_("Название"))
-#     # genre = models.ManyToManyField(Genre, related_name='work', verbose_name=_("Жанр"))
-#     # category =  models.ForeignKey(Сategory, on_delete=models.SET_NULL,related_name="work", verbose_name=_("Категория"))
-#     rating = models.FloatField(default=0, null=True, blank=True, verbose_name=_("Рейтинг"))
-#     year = models.IntegerField(verbose_name=_("Год"))
-#     description = models.TextField(null=True, blank=True,verbose_name=_("Описание"))
-class Title(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название')
-    year = models.IntegerField(null=True, blank=True, verbose_name='Дата')
-    description = models.CharField(
-        max_length=100, null=True, blank=True, verbose_name='Описание')
-    genre = models.ManyToManyField('Genre', related_name='title', blank=True,)
-    category = models.ForeignKey(
-        'Category', related_name='title', on_delete=models.SET_NULL, null=True, blank=True)
-    rating = models.FloatField(
-        default=None, null=True, blank=True, verbose_name='Рейтинг')
-
-    def __str__(self):
-        return self.name
-
-
 class Review(models.Model):
     score = models.SmallIntegerField(validators=[MinValueValidator(
         0), MaxValueValidator(11)], verbose_name=_("Оценка"))
