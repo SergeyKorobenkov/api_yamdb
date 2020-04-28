@@ -19,6 +19,11 @@ class ObjectMixin():
             obj = self.model.objects.filter(review=review_id)
         else:
             obj = self.model.objects.filter(title__id=title_id)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = self.serializer(obj, many=True)
         return Response(serializer.data)
 
@@ -27,7 +32,7 @@ class ObjectMixin():
         if serializer.is_valid():
             title = Title.objects.get(id=title_id)
             if review_id:
-                review = Rewiew.objects.get(id=review_id)
+                review = Review.objects.get(id=review_id)
                 serializer.save(author=request.user, review=review)
             else:
                 serializer.save(author=request.user, title=title)

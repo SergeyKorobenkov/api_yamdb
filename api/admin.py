@@ -14,3 +14,10 @@ class ReviewAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 admin.site.register(Review, ReviewAdmin)
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'review',  'text')
+    empty_value_display = '-пусто-'
+
+admin.site.register(Comment, CommentAdmin)

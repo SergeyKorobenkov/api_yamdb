@@ -9,23 +9,24 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
 
+
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
-        fields = ('id', 'text', 'author', 'created')
+        fields = ('id', 'text', 'author', 'pub_date')
         model = Comment
 
 
-
-
 class CategorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Category
         fields = ('name', 'slug')
 
 
 class GenreSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Genre
         fields = ('name', 'slug')

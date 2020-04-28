@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = get_user_model()
 
@@ -15,10 +16,11 @@ User = get_user_model()
 #     year = models.IntegerField(verbose_name=_("Год"))
 #     description = models.TextField(null=True, blank=True,verbose_name=_("Описание"))
 class Title(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название', blank=True)
-    year = models.IntegerField(verbose_name='Дата', blank=True)
-    description = models.CharField(max_length=100, verbose_name='Описание', blank=True)
-    genre = models.ManyToManyField('Genre', related_name='title', blank=True)
+    name = models.CharField(max_length=50, verbose_name='Название')
+    year = models.IntegerField(null=True, blank=True, verbose_name='Дата')
+    description = models.CharField(
+        max_length=100, null=True, blank=True, verbose_name='Описание')
+    genre = models.ManyToManyField('Genre', related_name='title', blank=True,)
     category = models.ForeignKey(
         'Category', related_name='title', on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.FloatField(
@@ -29,7 +31,8 @@ class Title(models.Model):
 
 
 class Review(models.Model):
-    score = models.SmallIntegerField(verbose_name=_("Оценка"))
+    score = models.SmallIntegerField(validators=[MinValueValidator(
+        0), MaxValueValidator(11)], verbose_name=_("Оценка"))
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='title_vote', verbose_name=_("Пользователь"))
     title = models.ForeignKey(
@@ -38,10 +41,13 @@ class Review(models.Model):
         auto_now=True, verbose_name=_("Дата оценки"))
     text = models.TextField(verbose_name=_("Текст"))
 
+    def __str__(self):
+        return self.title.name
+
 
 class Comment(models.Model):
     text = models.TextField(verbose_name=_("Текст"))
-    created = models.DateTimeField("date published", auto_now_add=True)
+    pub_date = models.DateTimeField("date published", auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comment_author")
     review = models.ForeignKey(
