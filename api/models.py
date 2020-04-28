@@ -17,7 +17,7 @@ class Title(models.Model):
     description = models.TextField(null=True, blank=True,verbose_name=_("Описание"))
 
 
-class Rewiew(models.Model):
+class Review(models.Model):
     score = models.SmallIntegerField(verbose_name=_("Оценка"))
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='title_vote', verbose_name=_("Пользователь"))
@@ -34,3 +34,32 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_author")
     review = models.ForeignKey(Rewiew, on_delete=models.CASCADE, related_name="vote_comment")
 
+
+class Title(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Название')
+    year = models.IntegerField(verbose_name='Дата')
+    description = models.CharField(max_length=100, verbose_name='Описание')
+    genre = models.ManyToManyField('Genre', related_name='title')
+    category = models.ForeignKey(
+        'Category', related_name='title', on_delete=models.SET_NULL, null=True)
+    rating = models.FloatField(
+        default=None, null=True, blank=True, verbose_name='Рейтинг')
+
+    def __str__(self):
+        return self.name
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Категория')
+    slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Жанр')
+    slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
