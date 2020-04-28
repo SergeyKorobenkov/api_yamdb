@@ -16,7 +16,7 @@ User = get_user_model()
 #     description = models.TextField(null=True, blank=True,verbose_name=_("Описание"))
 class Title(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название', blank=True)
-    year = models.IntegerField(verbose_name='Дата', blank=True)
+    year = models.IntegerField(verbose_name='Дата', blank=True, null=True)
     description = models.CharField(max_length=100, verbose_name='Описание', blank=True)
     genre = models.ManyToManyField('Genre', related_name='title', blank=True)
     category = models.ForeignKey(
