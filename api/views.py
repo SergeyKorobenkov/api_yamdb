@@ -1,3 +1,5 @@
+#ТЕСТ СЛИЯНИЯ
+
 from django.shortcuts import render
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.response import Response
