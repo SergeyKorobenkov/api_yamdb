@@ -15,12 +15,12 @@ User = get_user_model()
 #     year = models.IntegerField(verbose_name=_("Год"))
 #     description = models.TextField(null=True, blank=True,verbose_name=_("Описание"))
 class Title(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название')
-    year = models.IntegerField(verbose_name='Дата')
-    description = models.CharField(max_length=100, verbose_name='Описание')
-    genre = models.ManyToManyField('Genre', related_name='title')
+    name = models.CharField(max_length=50, verbose_name='Название', blank=True)
+    year = models.IntegerField(verbose_name='Дата', blank=True)
+    description = models.CharField(max_length=100, verbose_name='Описание', blank=True)
+    genre = models.ManyToManyField('Genre', related_name='title', blank=True)
     category = models.ForeignKey(
-        'Category', related_name='title', on_delete=models.SET_NULL, null=True)
+        'Category', related_name='title', on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.FloatField(
         default=None, null=True, blank=True, verbose_name='Рейтинг')
 
