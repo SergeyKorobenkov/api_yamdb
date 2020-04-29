@@ -1,25 +1,23 @@
-from .serializers import *
-from .models import User, Title, Review, Comment, Category, Genre
-from .utils import ObjectMixin
+
 from django.shortcuts import render
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.response import Response
-
-from .permissions import IsAdminOrReadOnly, IsAdminorMe
-from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
-
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenViewBase
 from django_filters.rest_framework import DjangoFilterBackend
+
 from .filters import TitleFilter
-from .serializers import UserEmailSerializer, ConfirmationCodeSerializer, UserSerializer
+from .serializers import *
+from .models import User, Title, Review, Comment, Category, Genre
+from .utils import ObjectMixin
+from .permissions import IsAdminOrReadOnly, IsAdminorMe
+
 
 
 @api_view(['POST'])
@@ -27,6 +25,7 @@ def get_confirmation_code(request):
     username = request.data.get('username')
     serializer = UserEmailSerializer(data=request.data)
     email = request.data.get('email')
+
     if serializer.is_valid():
         if username is not None:
             user = User.objects.filter(
@@ -48,10 +47,12 @@ def get_confirmation_code(request):
 @api_view(['POST'])
 def get_jwt_token(request):
     serializer = ConfirmationCodeSerializer(data=request.data)
+
     if serializer.is_valid():
         email = serializer.data.get('email')
         confirmation_code = serializer.data.get('confirmation_code')
         user = get_object_or_404(User, email=email)
+
         if default_token_generator.check_token(user, confirmation_code):
             token = AccessToken.for_user(user)
             return Response({'token': f'{token}'}, status=status.HTTP_200_OK)
@@ -67,6 +68,8 @@ class UserViewSet(ObjectMixin, viewsets.ModelViewSet):
     model = User
     serializer = UserSerializer
 
+
+# ПОСМОТРЕТЬ И УБРАТЬ/РАСКОМЕНТИТЬ
 # class UserDetailViewSet(ObjectMixin, viewsets.ModelViewSet):
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer
