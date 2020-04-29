@@ -3,10 +3,12 @@
 from django.shortcuts import render
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, Genre, Title
 from .permissions import IsAdminOrReadOnly
 from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
+from .filters import TitleFilter
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -14,6 +16,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     permission_classes = [IsAdminOrReadOnly,
                           permissions.IsAuthenticatedOrReadOnly]
+    filterset_class = TitleFilter
 
 
 class CategoryViewSet(mixins.CreateModelMixin,
