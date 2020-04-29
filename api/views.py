@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.response import Response
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAdminorMe
 from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
 
 from django.contrib.auth.tokens import default_token_generator
@@ -17,7 +17,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenViewBase
-
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TitleFilter
 from .serializers import UserEmailSerializer, ConfirmationCodeSerializer, UserSerializer
 
 
@@ -62,7 +63,7 @@ def get_jwt_token(request):
 class UserViewSet(ObjectMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminorMe]
     model = User
     serializer = UserSerializer
 
@@ -97,6 +98,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     permission_classes = [IsAdminOrReadOnly,
                           permissions.IsAuthenticatedOrReadOnly]
+    filterset_class = TitleFilter
 
 
 class CategoryViewSet(mixins.CreateModelMixin,

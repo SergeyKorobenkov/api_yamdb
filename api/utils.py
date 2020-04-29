@@ -20,7 +20,7 @@ class ObjectMixin():
         elif title_id:
             obj = self.model.objects.filter(title__id=title_id)
         else:
-            # if request.user.role == 'user':
+            # if request.user.is_staff or request.user.role == 'user':
             #     return Response(status=status.HTTP_403_FORBIDDEN)
             obj = self.model.objects.all()
         page = self.paginate_queryset(obj)
