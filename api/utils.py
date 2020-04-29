@@ -1,14 +1,8 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
 from django.db.models import Avg
-from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import status
-
 from .models import *
-
-
-User = get_user_model()
 
 
 class ObjectMixin():
@@ -21,11 +15,9 @@ class ObjectMixin():
         elif title_id:
             obj = self.model.objects.filter(title__id=title_id)
         else:
-            # if request.user.is_staff or request.user.role == 'user':
-            #     return Response(status=status.HTTP_403_FORBIDDEN)
             obj = self.model.objects.all()
         page = self.paginate_queryset(obj)
-        if page is not None:
+        if page:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         serializer = self.serializer(obj, many=True)
@@ -34,7 +26,6 @@ class ObjectMixin():
     def create(self, request, title_id=None, review_id=None):
         serializer = self.serializer(data=request.data)
         if serializer.is_valid():
-
             if review_id:
                 review = get_object_or_404(Review, id=review_id)
                 serializer.save(author=request.user, review=review)
@@ -51,7 +42,6 @@ class ObjectMixin():
                 title.rating = rat
                 title.save()
             else:
-
                 serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -60,11 +50,8 @@ class ObjectMixin():
         if title_id:
             obj = get_object_or_404(self.model, pk=pk)
         else:
-            if pk == 'me':
-                obj = request.user
-            else:
-                obj = get_object_or_404(self.model, username=pk)
-
+            obj = request.user if pk == 'me' else get_object_or_404(
+                self.model, username=pk)
         serializer = self.serializer(obj)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -80,7 +67,7 @@ class ObjectMixin():
         if serializer.is_valid():
             serializer.save()
             if title_id:
-                title = Title.objects.get(id=title_id)
+                title = get_object_or_404(Title, id=title_id)
                 rat = Review.objects.filter(
                     title=title).aggregate(Avg('score'))['score__avg']
                 rat = round(rat, 0)
@@ -91,7 +78,7 @@ class ObjectMixin():
 
     def destroy(self, request, title_id=None, review_id=None, pk=None):
         if pk == 'me':
-            return Response(status=405)
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             obj = get_object_or_404(self.model, pk=pk) if title_id else get_object_or_404(
                 self.model, username=pk)
