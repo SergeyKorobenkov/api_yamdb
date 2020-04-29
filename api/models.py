@@ -1,10 +1,39 @@
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-User = get_user_model()
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
+from django.utils import timezone
+from .managers import CustomUserManager
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_('email address'), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    bio = models.TextField(blank=True)
+    username = models.CharField(max_length=100, blank=True, unique=True)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    objects = CustomUserManager()
+
+    class UserRole(models.TextChoices):
+        USER = 'user'
+        MODERATOR = 'moderator'
+        ADMIN = 'admin'
+
+    role = models.CharField(
+        max_length=9, choices=UserRole.choices, default=UserRole.USER)
+
+    def __str__(self):
+        return self.email
 
 
 class Title(models.Model):
@@ -15,7 +44,7 @@ class Title(models.Model):
     genre = models.ManyToManyField('Genre', related_name='title', blank=True,)
     category = models.ForeignKey(
         'Category', related_name='title', on_delete=models.SET_NULL, null=True, blank=True)
-    rating = models.FloatField(
+    rating = models.IntegerField(
         default=None, null=True, blank=True, verbose_name='Рейтинг')
 
     def __str__(self):
@@ -24,7 +53,7 @@ class Title(models.Model):
 
 class Review(models.Model):
     score = models.SmallIntegerField(validators=[MinValueValidator(
-        0), MaxValueValidator(11)], verbose_name=_("Оценка"))
+        1), MaxValueValidator(10)], verbose_name=_("Оценка"))
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='title_vote', verbose_name=_("Пользователь"))
     title = models.ForeignKey(

@@ -15,9 +15,11 @@ router.register('titles/(?P<title_id>\d+)/reviews',
 router.register('titles', TitleViewSet, basename='titles')
 router.register('categories', CategoryViewSet, basename='categories')
 router.register('genres', GenreViewSet, basename='genres')
+#router.register('users/(?P<username>\w+)', UserDetailViewSet, basename='user')
+router.register('users', UserViewSet, basename='users')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("email/", get_confirmation_code, name="token_obtain_pair"),
+    path('token/', get_jwt_token, name='token'),
 ]
