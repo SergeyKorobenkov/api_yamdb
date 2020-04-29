@@ -1,11 +1,9 @@
-
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils.text import slugify
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
+from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from .managers import CustomUserManager
 
@@ -40,7 +38,7 @@ class Title(models.Model):
     year = models.IntegerField(null=True, blank=True, verbose_name='Дата')
     description = models.CharField(max_length=100, null=True, 
                                 blank=True, verbose_name='Описание')
-    genre = models.ManyToManyField('Genre', related_name='title', blank=True,)
+    genre = models.ManyToManyField('Genre', related_name='title', blank=True)
     category = models.ForeignKey('Category', related_name='title', 
                                 on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.IntegerField(default=None, null=True, 
