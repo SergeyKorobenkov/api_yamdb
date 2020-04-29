@@ -63,14 +63,6 @@ class UserViewSet(ObjectMixin, viewsets.ModelViewSet):
     serializer = UserSerializer
 
 
-# ПОСМОТРЕТЬ И УБРАТЬ/РАСКОМЕНТИТЬ
-# class UserDetailViewSet(ObjectMixin, viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     model = User
-#     serializer = UserSerializer
-
-
 def AnyUser(request, username):
     user = get_object_or_404(User, username=username)
     return user
