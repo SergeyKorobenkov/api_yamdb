@@ -10,6 +10,15 @@ class TitleAdmin(admin.ModelAdmin):
 admin.site.register(Title, TitleAdmin)
 
 
+class CategoryAdmin(admin.ModelAdmin):
+	list_display = ('name', 'slug')
+	empty_value_display = '-пусто-'
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Genre, CategoryAdmin)
+
+
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'score', 'text')
     empty_value_display = '-пусто-'

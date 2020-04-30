@@ -4,7 +4,6 @@ from .models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ['id', 'username', 'role', 'email',
@@ -37,28 +36,26 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ('name', 'slug')
 
 
 class GenreSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Genre
         fields = ('name', 'slug')
 
 
+# Кастомные поля для TitleSerializer
 class CategoryField(serializers.SlugRelatedField):
-
     def to_representation(self, value):
         serializer = CategorySerializer(value)
         return serializer.data
 
 
+# Кастомные поля для TitleSerializer
 class GenreField(serializers.SlugRelatedField):
-
     def to_representation(self, value):
         serializer = GenreSerializer(value)
         return serializer.data
