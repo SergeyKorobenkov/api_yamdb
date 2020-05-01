@@ -1,8 +1,12 @@
 from rest_framework import serializers
 
-from .models import *
+from api.models import *
+from users.models import *
+from reviews.models import *
+from titles.models import *
 
 
+# please read the message_for_reviewer in BASE_DIR
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -47,14 +51,14 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
 
 
-# Кастомное поле для TitleSerializer
+# Кастомные поля для TitleSerializer
 class CategoryField(serializers.SlugRelatedField):
     def to_representation(self, value):
         serializer = CategorySerializer(value)
         return serializer.data
 
 
-# Кастомное поле для TitleSerializer
+# Кастомные поля для TitleSerializer
 class GenreField(serializers.SlugRelatedField):
     def to_representation(self, value):
         serializer = GenreSerializer(value)

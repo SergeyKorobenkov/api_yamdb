@@ -2,9 +2,13 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from rest_framework.response import Response
 from rest_framework import status
-from .models import *
+
+from users.models import *
+from reviews.models import *
+from titles.models import *
 
 
+# please read the message_for_reviewer in BASE_DIR
 class ObjectMixin():
     model = None
     serializer = None

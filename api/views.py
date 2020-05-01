@@ -7,13 +7,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .filters import TitleFilter
-from .models import Category, Comment, Genre, Review, Title, User
-from .permissions import IsAdminorMe, IsAdminOrReadOnly
-from .serializers import *
-from .utils import ObjectMixin
+from api.filters import TitleFilter
+from api.permissions import IsAdminorMe, IsAdminOrReadOnly
+from api.serializers import *
+from api.utils import ObjectMixin
+from users.models import *
+from reviews.models import *
+from titles.models import *
 
 
+# please read the message_for_reviewer in BASE_DIR
 @api_view(['POST'])
 def get_confirmation_code(request):
     username = request.data.get('username')
@@ -61,11 +64,6 @@ class UserViewSet(ObjectMixin, viewsets.ModelViewSet):
     permission_classes = [IsAdminorMe]
     model = User
     serializer = UserSerializer
-
-
-def AnyUser(request, username):
-    user = get_object_or_404(User, username=username)
-    return user
 
 
 class ReviewViewSet(ObjectMixin, viewsets.ModelViewSet):

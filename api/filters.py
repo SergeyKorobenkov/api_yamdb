@@ -1,8 +1,9 @@
 from django_filters import rest_framework as filters
 
-from .models import Title
+from titles.models import *
 
 
+# please read the message_for_reviewer in BASE_DIR
 class TitleFilter(filters.FilterSet):
     category = filters.CharFilter(
         field_name='category__slug', lookup_expr='icontains'

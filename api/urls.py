@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import *
 
 
+# please read the message_for_reviewer in BASE_DIR
 router = DefaultRouter()
 router.register('titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments', 
                 CommentViewSet, basename='comments')

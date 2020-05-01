@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 
+# please read the message_for_reviewer in BASE_DIR
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
