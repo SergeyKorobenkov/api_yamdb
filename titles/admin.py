@@ -10,16 +10,14 @@ class TitleAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'year')
     empty_value_display = '-пусто-'
 
+
 admin.site.register(Title, TitleAdmin)
 
 
 class CategoryAdmin(admin.ModelAdmin):
-	list_display = ('name', 'slug')
-	empty_value_display = '-пусто-'
+    list_display = ('name', 'slug')
+    empty_value_display = '-пусто-'
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Genre, CategoryAdmin)
-
-
-

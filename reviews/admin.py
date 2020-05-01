@@ -10,6 +10,7 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'score', 'text')
     empty_value_display = '-пусто-'
 
+
 admin.site.register(Review, ReviewAdmin)
 
 
@@ -17,5 +18,6 @@ admin.site.register(Review, ReviewAdmin)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'review',  'text')
     empty_value_display = '-пусто-'
+
 
 admin.site.register(Comment, CommentAdmin)
