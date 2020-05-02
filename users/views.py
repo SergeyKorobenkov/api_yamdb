@@ -1,12 +1,10 @@
 from .serializers import *
-from .models import User, Title, Review, Comment, Category, Genre
-from .utils import ObjectMixin
-from django.shortcuts import render
-from rest_framework import filters, mixins, permissions, viewsets
+from .models import *
+from reviews.utils import ObjectMixin
+from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .permissions import IsAdminOrReadOnly, IsAdminorMe
-from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
+from .permissions import IsAdminorMe
 
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -14,11 +12,9 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.views import TokenViewBase
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import TitleFilter
 from .serializers import UserEmailSerializer, ConfirmationCodeSerializer, UserSerializer
 
 
@@ -67,61 +63,7 @@ class UserViewSet(ObjectMixin, viewsets.ModelViewSet):
     model = User
     serializer = UserSerializer
 
-# class UserDetailViewSet(ObjectMixin, viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     model = User
-#     serializer = UserSerializer
-
 
 def AnyUser(request, username):
     user = get_object_or_404(User, username=username)
     return user
-
-
-class ReviewViewSet(ObjectMixin, viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    model = Review
-    serializer = ReviewSerializer
-
-
-class CommentViewSet(ObjectMixin, viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    model = Comment
-    serializer = CommentSerializer
-
-
-class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    permission_classes = [IsAdminOrReadOnly,
-                          permissions.IsAuthenticatedOrReadOnly]
-    filterset_class = TitleFilter
-
-
-class CategoryViewSet(mixins.CreateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.DestroyModelMixin,
-                      viewsets.GenericViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnly,
-                          permissions.IsAuthenticatedOrReadOnly]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['=name']
-    lookup_field = 'slug'
-
-
-class GenreViewSet(mixins.CreateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.GenericViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    permission_classes = [IsAdminOrReadOnly,
-                          permissions.IsAuthenticatedOrReadOnly]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['=name']
-    lookup_field = 'slug'
